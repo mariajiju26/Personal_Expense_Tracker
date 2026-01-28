@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Daily Expense Tracker</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+
+        <form action="/add" method="POST" class="expense-form">
+            <input type="text" name="item" placeholder="Item Name" required>
+            <input type="number" step="0.01" name="amount" placeholder="Amount (Rs.)" required>
+            <select name="category">
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Tech/Lab">Tech/Lab</option>
+                <option value="Other">Other</option>
+            </select>
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <div class="tabs">
+            <a href="/?view=daily" class="{{ 'active' if view == 'daily' }}">Daily</a>
+            <a href="/?view=weekly" class="{{ 'active' if view == 'weekly' }}">Weekly</a>
+            <a href="/?view=monthly" class="{{ 'active' if view == 'monthly' }}">Monthly</a>
+        </div>
+
+        <div class="summary">
+            <h3>Total: <span>Rs. {{ "%.2f"|format(total) }}</span></h3>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ expense.item }}</td>
+                    <td><span class="badge">{{ expense.category }}</span></td>
+                    <td>Rs. {{ "%.2f"|format(expense.amount) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
